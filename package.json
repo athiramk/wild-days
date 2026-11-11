@@ -1,0 +1,17 @@
+{
+  "name": "wild-days",
+  "type": "module",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "add-outing": "node scripts/add-outing.mjs"
+  },
+  "dependencies": {
+    "@fontsource-variable/manrope": "^5.3.0",
+    "@fontsource/fira-code": "^5.3.0",
+    "astro": "^7.4.10"
+  }
+}

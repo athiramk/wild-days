@@ -1,0 +1,49 @@
+---
+import "../styles/global.css";
+interface Props { title?: string }
+const { title } = Astro.props;
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+const pageTitle = title ? `${title} · Wild days` : "Wild days";
+---
+<!doctype html>
+<html lang="en" data-theme="light">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{pageTitle}</title>
+    <meta name="description" content="A personal journal." />
+    <!-- unlisted: ask search engines not to index or follow anything here -->
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="icon" href={`${base}/favicon.svg`} type="image/svg+xml" />
+    <script is:inline>
+      (function () {
+        try {
+          var t = localStorage.getItem("theme");
+          if (!t) t = matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+          document.documentElement.dataset.theme = t;
+        } catch (e) {}
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip" href="#main">Skip to content</a>
+    <div class="top">
+      <div class="in">
+        <a class="logo" href={`${base}/`}>Wild days</a>
+        <button class="icon-btn" id="theme" type="button" aria-label="Toggle dark mode">◐</button>
+      </div>
+    </div>
+    <main id="main">
+      <slot />
+      <footer class="site">A personal journal of hikes, swims and camps.</footer>
+    </main>
+    <script is:inline>
+      document.getElementById("theme").addEventListener("click", function () {
+        var r = document.documentElement;
+        var n = r.dataset.theme === "dark" ? "light" : "dark";
+        r.dataset.theme = n;
+        try { localStorage.setItem("theme", n); } catch (e) {}
+      });
+    </script>
+  </body>
+</html>

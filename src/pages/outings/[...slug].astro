@@ -1,0 +1,24 @@
+---
+import { render } from "astro:content";
+import Base from "../../layouts/Base.astro";
+import { getOutings, formatDate } from "../../lib/outings";
+
+export async function getStaticPaths() {
+  const outings = await getOutings();
+  return outings.map((o, i) => ({ params: { slug: o.id }, props: { o, newer: outings[i - 1], older: outings[i + 1] } }));
+}
+const { o, newer, older } = Astro.props;
+const { Content } = await render(o);
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+---
+<Base title={o.data.place}>
+  <div class="eyebrow">{o.data.type}</div>
+  <h1>{o.data.place}</h1>
+  <p class="meta">{formatDate(o.data.date)}</p>
+  <div class="prose"><Content /></div>
+  <nav class="pn" aria-label="More entries">
+    {older ? <a href={`${base}/outings/${older.id}/`}><small>← Earlier</small>{older.data.place}</a> : <span />}
+    {newer ? <a class="next" href={`${base}/outings/${newer.id}/`}><small>Later →</small>{newer.data.place}</a> : <span />}
+  </nav>
+  <p style="margin-top:36px"><a href={`${base}/`} style="color:var(--acc)">← All entries</a></p>
+</Base>

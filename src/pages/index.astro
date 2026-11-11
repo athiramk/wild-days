@@ -1,0 +1,79 @@
+---
+import { render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import { getOutings, formatDate, summary, yearOf, TYPES, type Outing } from "../lib/outings";
+
+const outings = await getOutings();
+const years = [...new Set(outings.map((o) => yearOf(o.data.date)))];
+const base = import.meta.env.BASE_URL.replace(/\/$/, "");
+
+// short notes are shown in full; long ones as an excerpt with "Read more"
+const SHORT = 320;
+const plain = (md: string) => md.replace(/[#>*_`\[\]]/g, "").replace(/\(https?:[^)]*\)/g, "").replace(/\s+/g, " ").trim();
+const rendered = await Promise.all(
+  outings.map(async (o) => ({ o, long: (o.body ?? "").length > SHORT, Content: (await render(o)).Content })),
+);
+const byId = new Map(rendered.map((r) => [r.o.id, r]));
+const excerpt = (o: Outing) => plain(o.body ?? "").slice(0, 220).replace(/\s+\S*$/, "") + "…";
+---
+<Base>
+  <div class="eyebrow">// journal</div>
+  <h1>Wild <b>days</b></h1>
+  <p class="lede">Hikes, swims and nights under canvas, kept as short notes.</p>
+
+  {outings.length === 0 ? (
+    <p class="empty">No entries yet. Add one with <code>npm run add-outing</code>.</p>
+  ) : (
+    <>
+      <div class="filters" id="filters" role="group" aria-label="Filter by type" hidden>
+        <button type="button" data-filter="all" aria-pressed="true">all</button>
+        {TYPES.map((t) => <button type="button" data-filter={t.id} aria-pressed="false">{t.many}</button>)}
+      </div>
+
+      {years.map((y) => {
+        const inYear = outings.filter((o) => yearOf(o.data.date) === y);
+        return (
+          <section class="year" data-year>
+            <header>
+              <h2>{y}</h2>
+              <span class="meta">{summary(inYear)}</span>
+            </header>
+            {inYear.map((o) => {
+              const r = byId.get(o.id)!;
+              return (
+                <article class="entry" data-type={o.data.type} data-entry>
+                  <div class="head">
+                    <span class="badge">{o.data.type}</span>
+                    <h3><a href={`${base}/outings/${o.id}/`}>{o.data.place}</a></h3>
+                    <time class="meta date">{formatDate(o.data.date)}</time>
+                  </div>
+                  <div class="note">
+                    {r.long ? (
+                      <p>{excerpt(o)} <a class="more" href={`${base}/outings/${o.id}/`}>Read more</a></p>
+                    ) : (
+                      <r.Content />
+                    )}
+                  </div>
+                </article>
+              );
+            })}
+          </section>
+        );
+      })}
+    </>
+  )}
+</Base>
+
+<script>
+  const bar = document.getElementById("filters");
+  if (bar) {
+    bar.hidden = false; // filters only appear when JavaScript works; without it every entry stays visible
+    const buttons = [...bar.querySelectorAll<HTMLButtonElement>("button")];
+    const apply = (filter: string) => {
+      buttons.forEach((b) => b.setAttribute("aria-pressed", String(b.dataset.filter === filter)));
+      document.querySelectorAll<HTMLElement>("[data-entry]").forEach((e) => (e.hidden = filter !== "all" && e.dataset.type !== filter));
+      document.querySelectorAll<HTMLElement>("[data-year]").forEach((y) => (y.hidden = !y.querySelector("[data-entry]:not([hidden])")));
+    };
+    buttons.forEach((b) => b.addEventListener("click", () => apply(b.dataset.filter ?? "all")));
+  }
+</script>

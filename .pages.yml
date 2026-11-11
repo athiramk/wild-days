@@ -1,0 +1,36 @@
+# Pages CMS configuration - lets you add and edit entries from a phone browser at https://app.pagescms.org
+# There are deliberately NO image or file fields, so nothing with photo metadata can be uploaded from here.
+
+settings:
+  # keep any frontmatter keys that are not listed below when an entry is saved
+  content: true
+
+content:
+  - name: outings
+    label: Outings
+    type: collection
+    path: src/content/outings
+    format: yaml-frontmatter
+    filename: "{date}-{place}.md"
+    view:
+      primary: place
+      sort: date
+      order: desc
+    fields:
+      - name: type
+        label: Type
+        type: select
+        options:
+          values: [hike, swim, camp]
+      - name: place
+        label: Place
+        type: string
+      - name: date
+        label: Date (2026-11-08, 2021-03 or 2019)
+        type: string
+      - name: draft
+        label: Draft (hidden from the site)
+        type: boolean
+      - name: body
+        label: Note
+        type: text

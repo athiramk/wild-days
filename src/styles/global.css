@@ -1,0 +1,60 @@
+@import "@fontsource-variable/manrope";
+@import "@fontsource/fira-code/400.css";
+
+:root {
+  --bg: #f9fbf8; --fg: #1f2a24; --mute: #5d6b63; --line: #e1e9e3;
+  --acc: #2b7a55; --acc-ink: #ffffff; --soft: #e6f3ec; --card: #ffffff;
+  --hike: #2b7a55; --swim: #2468b4; --camp: #b0651a;
+  color-scheme: light;
+}
+:root[data-theme="dark"] {
+  --bg: #121714; --fg: #e3ebe5; --mute: #9db0a4; --line: #25302a;
+  --acc: #6fcf9f; --acc-ink: #0f1a14; --soft: #1a2620; --card: #18211c;
+  --hike: #6fcf9f; --swim: #7db6f0; --camp: #e9a766;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+body { margin: 0; background: var(--bg); color: var(--fg); font: 300 18px/1.65 "Manrope Variable", Manrope, system-ui, sans-serif; letter-spacing: -0.1px; }
+a { color: inherit; }
+:focus-visible { outline: 2px solid var(--acc); outline-offset: 3px; border-radius: 4px; }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--acc); color: var(--acc-ink); padding: 8px 14px; border-radius: 8px; z-index: 40; }
+.skip:focus { left: 8px; }
+
+.top { border-bottom: 1px solid var(--line); }
+.top .in { max-width: 720px; margin: 0 auto; padding: 14px 22px; display: flex; align-items: center; justify-content: space-between; }
+.logo { font-weight: 700; text-decoration: none; }
+.icon-btn { background: none; border: 1px solid var(--line); color: var(--fg); border-radius: 8px; padding: 6px 11px; font-family: inherit; font-size: 13px; cursor: pointer; }
+.icon-btn:hover { border-color: var(--acc); }
+main { max-width: 720px; margin: 0 auto; padding: 44px 22px 90px; }
+.eyebrow { font: 400 13px "Fira Code", monospace; color: var(--acc); }
+h1 { font-family: inherit; font-weight: 300; font-size: clamp(32px, 5vw, 46px); line-height: 1.15; letter-spacing: -.03em; margin: 10px 0 14px; }
+h1 b { font-weight: 700; }
+.lede { color: var(--mute); margin: 0 0 28px; font-size: 18px; }
+.meta { font: 400 12.5px "Fira Code", monospace; color: var(--mute); }
+
+.filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 8px; }
+.filters button { font: 400 13px "Fira Code", monospace; border: 1px solid var(--line); background: none; color: var(--mute); border-radius: 99px; padding: 4px 14px; cursor: pointer; }
+.filters button:hover { border-color: var(--acc); color: var(--fg); }
+.filters button[aria-pressed="true"] { background: var(--acc); border-color: var(--acc); color: var(--acc-ink); }
+
+.year { margin-top: 48px; }
+.year header { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; flex-wrap: wrap; border-bottom: 1px solid var(--line); padding-bottom: 8px; margin-bottom: 6px; }
+.year h2 { margin: 0; font-size: 26px; font-weight: 700; letter-spacing: -.02em; }
+
+.entry { padding: 20px 0; border-bottom: 1px solid var(--line); }
+.entry .head { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.badge { font: 400 11.5px "Fira Code", monospace; text-transform: lowercase; padding: 2px 10px; border-radius: 6px; color: var(--c); background: color-mix(in srgb, var(--c) 13%, transparent); }
+[data-type="hike"] { --c: var(--hike); } [data-type="swim"] { --c: var(--swim); } [data-type="camp"] { --c: var(--camp); }
+.entry h3 { margin: 0; font-size: 20px; font-weight: 700; letter-spacing: -.02em; }
+.entry h3 a { text-decoration: none; } .entry h3 a:hover { color: var(--acc); }
+.entry .date { margin-left: auto; }
+.note { margin: 8px 0 0; color: var(--fg); }
+.note p { margin: 0 0 .8em; } .note p:last-child { margin-bottom: 0; }
+.more { font-size: 15px; color: var(--acc); }
+.empty { color: var(--mute); border: 1px dashed var(--line); border-radius: 12px; padding: 28px; }
+.pn { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 48px; }
+.pn a { border: 1px solid var(--line); border-radius: 10px; padding: 14px 18px; text-decoration: none; font-size: 15px; }
+.pn a:hover { border-color: var(--acc); } .pn small { display: block; color: var(--mute); font-size: 12px; } .pn .next { text-align: right; }
+footer.site { margin-top: 70px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 14px; color: var(--mute); }
+.prose p { margin: 0 0 1.1em; } .prose a { color: var(--acc); }
